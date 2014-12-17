@@ -8,16 +8,12 @@
 <body>
 <h1>Shadowsocks Server</h1>
 <div class="server_info">
-    {% for name, value in config %}
     <div class="line">
-        <label>{{name}}:
-            <input value="{{value}}" type="text" readonly/>
+        <label>Password
+            <input value="{{config.password}}" type="text" readonly/>
         </label>
-        {% if name == 'Password' %}
         <button id="new_password">New</button>
-        {% end %}
     </div>
-    {% end %}
     Running: <span id="status">...</span>
     <button id="start" disabled>Start</button>
     <button id="stop" disabled>Stop</button>

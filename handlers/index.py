@@ -10,12 +10,7 @@ class IndexHandler(BaseHandler):
     @authenticated
     def get(self):
         ss = self.get_ss()
-        self.render("index.html", config=(
-            ('Port', ss.port),
-            ('Password', ss.password),
-            ('Method', ss.method),
-            ('Fast Open', ss.fast_open),
-        ), running=str(ss.running).lower())
+        self.render("index.html", config=ss, running=str(ss.running).lower())
 
     @authenticated
     def post(self):
