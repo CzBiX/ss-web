@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import time
 
 import tornado
 import logging
@@ -17,7 +18,7 @@ __author__ = 'czbix'
 define("debug", default=True, type=bool)
 define("port", default=8000, help="port to listen", type=int)
 define("cookie_secret", default="61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o", help="key for HMAC", type=str)
-
+define("password_timeout", default=1000 * 3600 * 48, help="auto reset ss password", type=int)
 
 class App(Application):
     def __init__(self):
@@ -39,13 +40,20 @@ class App(Application):
         self.shadowsocks = Shadowsocks()
 
         super(App, self).__init__(handlers, **settings)
-        #PeriodicCallback(None, 1000).start()
 
         logging.info("listening on http://localhost:%s" % options.port)
+
+        if options.password_timeout > 0:
+            PeriodicCallback(self._reset_password, options.password_timeout).start()
 
     @staticmethod
     def _set_default_header(handler):
         handler.set_header('Server', 'Lover')
+
+    def _reset_password(self):
+        self.shadowsocks.new_password()
+        if self.shadowsocks.running:
+            self.shadowsocks.stop()
 
 
 def main():
