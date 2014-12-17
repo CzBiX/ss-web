@@ -1,0 +1,16 @@
+h1 {
+  text-align: center;
+}
+.server_info {
+  width: 1024px;
+  margin: 50px auto;
+}
+.server_info .line label {
+  width: 400px;
+  line-height: 32px;
+  display: block;
+  clear: both;
+}
+.server_info .line label input {
+  float: right;
+}
