@@ -1,16 +1,106 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #333;
+  background-color: #fff;
+  margin: 0;
+}
 h1 {
-  text-align: center;
+  border-bottom: 1px solid #dbdbdb;
+  padding: 20px 0 12px 30px;
+  margin: 0;
 }
-.server_info {
-  width: 1024px;
-  margin: 50px auto;
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  display: table;
 }
-.server_info .line label {
-  width: 400px;
-  line-height: 32px;
-  display: block;
+.clearfix:after {
   clear: both;
 }
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 6px 10px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #333;
+  background: #fff none;
+  border: 1px solid #ccc;
+}
+.server_info {
+  width: 485px;
+  margin: 20px 0 0 30px;
+}
+.server_info .line {
+  margin-bottom: 10px;
+}
+.server_info .line label {
+  line-height: 32px;
+  float: left;
+}
+.server_info .line label span {
+  width: 85px;
+  float: left;
+}
 .server_info .line label input {
+  float: left;
+  display: block;
+  width: 400px;
+  height: 34px;
+  padding: 6px 10px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #555;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  opacity: 1;
+  background: #fff none;
+}
+.server_info .line.password label input {
+  width: 350px;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+.server_info .line.password .btn {
+  float: left;
+  width: 51px;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  margin-left: -1px;
+}
+.server_info .running #status {
+  width: 50px;
+  display: inline-block;
+}
+.server_info .running #stop,
+.server_info .running #start {
+  width: 65px;
   float: right;
+  color: #fff;
+}
+.server_info .running #start {
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+.server_info .running #stop {
+  background-color: #f0ad4e;
+  border-color: #eea236;
+  margin-left: 5px;
 }
