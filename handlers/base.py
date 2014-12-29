@@ -15,3 +15,7 @@ class BaseHandler(RequestHandler):
     def write_json(self, data):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(data))
+
+    def write_png(self, data):
+        self.set_header('Content-Type', 'image/png')
+        self.write(data)

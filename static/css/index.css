@@ -104,3 +104,7 @@ h1 {
   border-color: #eea236;
   margin-left: 5px;
 }
+#qrcode_info {
+  width: 250px;
+  height: 250px;
+}

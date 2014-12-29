@@ -9,7 +9,8 @@ from tornado.httpserver import HTTPServer
 from tornado.ioloop import PeriodicCallback
 from tornado.options import define, options
 from tornado.web import Application, os, RequestHandler
-from handlers.index import IndexHandler
+from handlers.index import *
+from handlers.qrcode import *
 from handlers.user import *
 from libs.shadowsocks import Shadowsocks
 
@@ -34,6 +35,7 @@ class App(Application):
         handlers = [
             (r'/', IndexHandler),
             (r'/user/login', UserHandler),
+            (r'/qrcode', QrcodeHandler),
         ]
 
         RequestHandler.set_default_headers = App._set_default_header

@@ -38,16 +38,20 @@
         <button class="btn" id="stop" disabled>Stop</button>
         <button class="btn" id="start" disabled>Start</button>
     </div>
+</div>
+<img id="qrcode_info" />
 <script type="text/javascript" src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
 <script type="application/javascript">
-    var running = {{running}};
+    var qrcode_api = '/qrcode?chl=';
+
     $(function(){
         var $start = $('#start');
         var $stop = $('#stop');
         var $status = $('#status');
         var $newPassword = $('#new_password');
+        var $qrcodeInfo = $('#qrcode_info');
 
-        updateStatus(running);
+        updateStatus({running: {{ running }}, qrcode: '{{ qrcode }}'});
 
         $start.click(function(){
             disableBtn($start);
@@ -68,19 +72,21 @@
         function sendAction(action) {
             $status.text('...');
             return $.post('/', {action: action}).success(function(data){
-                updateStatus(data.running);
+                updateStatus(data);
             }).error(function(){
                 $status.text('Error');
             });
         }
 
-        function updateStatus(running) {
-            $status.text(running);
-            if (running) {
+        function updateStatus(data) {
+            $status.text(data.running);
+            if (data.running) {
                 enableBtn($stop);
             } else {
                 enableBtn($start);
             }
+
+            showQrCode(data.qrcode);
         }
 
         function enableBtn($el) {
@@ -89,6 +95,11 @@
 
         function disableBtn($el) {
             $el.prop('disabled', true);
+        }
+
+        function showQrCode(qrcode) {
+            var url = qrcode_api + encodeURIComponent(qrcode);
+            $qrcodeInfo.attr('src', url);
         }
     });
 </script>

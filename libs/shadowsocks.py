@@ -1,3 +1,4 @@
+import base64
 import json
 import string
 import subprocess
@@ -67,6 +68,10 @@ class Shadowsocks:
     @property
     def running(self):
         return True if (self._process and self._process.poll() is None) else False
+
+    def qrcode(self, server_addr):
+        qrcode = "%s:%s@%s:%d" % (self.method, self.password, server_addr, self.port)
+        return base64.b64encode(qrcode.encode()).decode()
 
     def stop(self):
         assert self._process is not None
