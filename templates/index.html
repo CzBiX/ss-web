@@ -2,7 +2,9 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Shadowsocks</title>
+    <link rel="stylesheet" href="/static/css/normalize.css"/>
     <link href="{{ static_url('css/index.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -34,12 +36,16 @@
         </label>
     </div>
     <div class="running">
-        Running: <span id="status">...</span>
-        <button class="btn" id="stop" disabled>Stop</button>
+        <span>Running: </span>
+        <span id="status">...</span>
         <button class="btn" id="start" disabled>Start</button>
+        <button class="btn" id="stop" disabled>Stop</button>
     </div>
 </div>
-<img id="qrcode_info" />
+
+<h1>qrcode for mobile app</h1>
+<img id="qrcode_info"  src=""/>
+
 <script type="text/javascript" src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
 <script type="application/javascript">
     var qrcode_api = '/qrcode?chl=';

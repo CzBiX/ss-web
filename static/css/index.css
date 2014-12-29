@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
+  font-family: Georgia, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
   font-size: 14px;
   line-height: 1.428571429;
   color: #333;
@@ -46,7 +46,7 @@ h1 {
 }
 .server_info {
   width: 485px;
-  margin: 20px 0 0 30px;
+  margin: 20px 0 10px 30px;
 }
 .server_info .line {
   margin-bottom: 10px;
@@ -81,21 +81,30 @@ h1 {
 .server_info .line.password .btn {
   float: left;
   width: 51px;
+  height: 34px;
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
   margin-left: -1px;
 }
-.server_info .running #status {
+.server_info .running {
+  display: flex;
+}
+.server_info .running span {
+  line-height: 34px;
+}
+.server_info .running span#status {
   width: 50px;
-  display: inline-block;
+  padding-left: 4px;
 }
 .server_info .running #stop,
 .server_info .running #start {
   width: 65px;
+  height: 34px;
   float: right;
   color: #fff;
 }
 .server_info .running #start {
+  margin-left: auto;
   background-color: #5cb85c;
   border-color: #4cae4c;
 }
@@ -107,4 +116,29 @@ h1 {
 #qrcode_info {
   width: 250px;
   height: 250px;
+  margin: 20px 0 0 30px;
+}
+@media screen and (max-width: 600px), screen and (-webkit-min-device-pixel-ratio: 2) {
+  .content {
+    margin-top: 30%;
+  }
+  .server_info {
+    margin-left: 30px;
+    margin-right: 30px;
+    width: auto;
+  }
+  .server_info .line {
+    margin-bottom: 10px;
+  }
+  .server_info .line label input {
+    width: 215px;
+  }
+  .server_info .line.password label input {
+    width: 165px;
+  }
+  #qrcode_info {
+    position: relative;
+    left: 50%;
+    margin: 30px 0 30px -125px;
+  }
 }

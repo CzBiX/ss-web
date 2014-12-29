@@ -2,11 +2,26 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Login</title>
+    <link rel="stylesheet" href="/static/css/normalize.css"/>
     <style>
         .content {
-            margin-top: 200px;
+            margin-top: 5%;
             text-align: center;
+        }
+
+        input {
+            height: 34px;
+            padding: 6px 10px;
+            font-size: 14px;
+            line-height: 1.428571429;
+            color: #555;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff none;
+            box-sizing: border-box;
+            margin-left: 4px;
         }
     </style>
 </head>
@@ -14,9 +29,27 @@
 <div class="content">
     <form method="post">
         <label>Password:
-            <input type="password" name="password" autofocus />
+            <input type="password" name="password" autofocus/>
         </label>
     </form>
 </div>
+<script>
+    var height = document.body.scrollHeight;
+    var $content = document.querySelector('.content')
+
+    var AgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "iPod", "iPad", "WindowsPhone", "SymbianOS"];
+    var agentsLength = AgentInfo.length;
+    var isPhone = false;
+    for (var i = 0; i < agentsLength; i++) {
+        if (AgentInfo.indexOf(agents[i]) > 0) {
+            isPhone = true;
+        }
+    }
+
+    if (isPhone) {
+        $content.style.marginTop = height / 2 - 17 + 'px';
+    }
+</script>
 </body>
 </html>
