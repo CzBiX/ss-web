@@ -15,4 +15,4 @@ class UserHandler(BaseHandler):
             self.send_error(500)
 
         self.set_cookie('login', '1', expires_days=7)
-        self.redirect('/')
+        self.redirect(self.get_query_argument('next'))
