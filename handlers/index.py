@@ -31,7 +31,7 @@ class IndexHandler(BaseHandler):
 
         result = {
             'running': ss.running,
-            'qrcode': ss.qrcode,
+            'qrcode': ss.qrcode(self._get_host()),
         }
 
         self.write_json(result)
