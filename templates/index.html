@@ -13,7 +13,7 @@
     <div class="line clearfix password">
         <label>
             <span>Password</span>
-            <input value="{{config.password}}" type="text" readonly/>
+            <input id="password" value="..." type="text" readonly/>
         </label>
         <button class="btn" id="new_password">New</button>
     </div>
@@ -54,10 +54,11 @@
         var $start = $('#start');
         var $stop = $('#stop');
         var $status = $('#status');
-        var $newPassword = $('#new_password');
+        var $pwd = $('#password');
+        var $newPwdBtn = $('#new_password');
         var $qrcodeInfo = $('#qrcode_info');
 
-        updateStatus({running: {{ running }}, qrcode: '{{ qrcode }}'});
+        updateStatus({running: {{ running }}, qrcode: '{{ qrcode }}', password: '{{ config.password}}'});
 
         $start.click(function(){
             disableBtn($start);
@@ -69,14 +70,14 @@
             sendAction('stop');
         });
 
-        $newPassword.click(function(){
-            sendAction('new_password').always(function(){
-                location.reload();
-            });
+        $newPwdBtn.click(function(){
+            sendAction('new_password');
         });
 
         function sendAction(action) {
             $status.text('...');
+            $pwd.val('...');
+
             return $.post('/', {action: action}).success(function(data){
                 updateStatus(data);
             }).error(function(){
@@ -93,6 +94,7 @@
             }
 
             showQrCode(data.qrcode);
+            showPwd(data.password);
         }
 
         function enableBtn($el) {
@@ -106,6 +108,10 @@
         function showQrCode(qrcode) {
             var url = qrcode_api + encodeURIComponent(qrcode);
             $qrcodeInfo.attr('src', url);
+        }
+
+        function showPwd(password) {
+            $pwd.val(password);
         }
     });
 </script>

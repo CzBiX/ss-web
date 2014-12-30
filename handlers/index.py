@@ -31,6 +31,7 @@ class IndexHandler(BaseHandler):
 
         result = {
             'running': ss.running,
+            'password': ss.password,
             'qrcode': ss.qrcode(self._get_host()),
         }
 

@@ -81,10 +81,6 @@ class Shadowsocks:
 
         self._process = None
 
-    def restart(self):
-        self.stop()
-        self.start()
-
     def __del__(self):
-        if self._process is not None:
+        if self.running:
             self.stop()
