@@ -111,20 +111,24 @@ h1 {
 
     span {
       line-height: 34px;
+    }
 
-      &#status {
-        width: 50px;
-        padding-left: 4px;
-      }
+    #status {
+      width: 50px;
+      padding-left: 4px;
     }
 
 
-    #stop,
-    #start {
+    .btn {
       width: 65px;
       height: 34px;
       float: right;
       color: #fff;
+
+      &:disabled {
+        background-color: lightgray !important;
+        border-color: gray !important;
+      }
     }
 
     #start {

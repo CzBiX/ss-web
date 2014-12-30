@@ -92,16 +92,19 @@ h1 {
 .server_info .running span {
   line-height: 34px;
 }
-.server_info .running span#status {
+.server_info .running #status {
   width: 50px;
   padding-left: 4px;
 }
-.server_info .running #stop,
-.server_info .running #start {
+.server_info .running .btn {
   width: 65px;
   height: 34px;
   float: right;
   color: #fff;
+}
+.server_info .running .btn:disabled {
+  background-color: lightgray !important;
+  border-color: gray !important;
 }
 .server_info .running #start {
   margin-left: auto;
