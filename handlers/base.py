@@ -1,5 +1,4 @@
 import json
-import tornado
 from tornado.web import RequestHandler
 
 __author__ = 'czbix'

@@ -1,8 +1,6 @@
-import json
 from time import sleep
 from handlers.base import BaseHandler
 from tornado.web import authenticated
-from tornado import httputil
 
 __author__ = 'czbix'
 

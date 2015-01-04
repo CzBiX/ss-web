@@ -1,13 +1,9 @@
 #!/usr/bin/python3
-import time
-
-import tornado
-import logging
 
 from tornado import ioloop
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import PeriodicCallback
-from tornado.options import define, options
+from tornado.options import define
 from tornado.web import Application, os, RequestHandler
 from handlers.index import *
 from handlers.qrcode import *
@@ -20,6 +16,7 @@ define("debug", default=True, type=bool)
 define("port", default=8000, help="port to listen", type=int)
 define("cookie_secret", default="61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o", help="key for HMAC", type=str)
 define("password_timeout", default=7, help="auto reset ss password for days", type=int)
+
 
 class App(Application):
     def __init__(self):
@@ -46,7 +43,8 @@ class App(Application):
         logging.info("listening on http://localhost:%s" % options.port)
 
         if options.password_timeout > 0:
-            self.reset_timer = PeriodicCallback(self._reset_password, options.password_timeout * 24 * 3600 * 1000).start()
+            self.reset_timer = PeriodicCallback(self._reset_password,
+                                                options.password_timeout * 24 * 3600 * 1000).start()
 
     @staticmethod
     def _set_default_header(handler):
