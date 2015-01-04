@@ -19,7 +19,7 @@ __author__ = 'czbix'
 define("debug", default=True, type=bool)
 define("port", default=8000, help="port to listen", type=int)
 define("cookie_secret", default="61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o", help="key for HMAC", type=str)
-define("password_timeout", default=1000 * 3600 * 48, help="auto reset ss password", type=int)
+define("password_timeout", default=7, help="auto reset ss password for days", type=int)
 
 class App(Application):
     def __init__(self):
@@ -46,7 +46,7 @@ class App(Application):
         logging.info("listening on http://localhost:%s" % options.port)
 
         if options.password_timeout > 0:
-            PeriodicCallback(self._reset_password, options.password_timeout).start()
+            self.reset_timer = PeriodicCallback(self._reset_password, options.password_timeout * 24 * 3600 * 1000).start()
 
     @staticmethod
     def _set_default_header(handler):
@@ -56,6 +56,8 @@ class App(Application):
         self.shadowsocks.new_password()
         if self.shadowsocks.running:
             self.shadowsocks.stop()
+
+        self.shadowsocks.start()
 
 
 def main():
