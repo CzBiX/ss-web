@@ -9,7 +9,7 @@ class BaseHandler(RequestHandler):
         self.set_header('Server', 'Lover')
 
     def get_current_user(self):
-        return self.get_cookie('login') == '1'
+        return self.get_secure_cookie('login') is not None
 
     def write_json(self, data):
         self.set_header('Content-Type', 'application/json')

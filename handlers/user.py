@@ -14,5 +14,5 @@ class UserHandler(BaseHandler):
         if self.get_body_argument('password') != 'bamboofun':
             self.send_error(500)
 
-        self.set_cookie('login', '1', expires_days=7)
+        self.set_secure_cookie('login', '1')
         self.redirect(self.get_query_argument('next'))
