@@ -62,7 +62,7 @@ def main():
     options.parse_command_line()
     app = App()
 
-    server = HTTPServer(app)
+    server = HTTPServer(app, xheaders=True)
     server.listen(options.port)
 
     ioloop.IOLoop.instance().start()
