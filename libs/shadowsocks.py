@@ -43,7 +43,7 @@ class Shadowsocks:
         return self.config['fast_open']
 
     def start(self):
-        assert self._process is None
+        assert not self.running
 
         args = [
             'ss-server',
@@ -68,7 +68,7 @@ class Shadowsocks:
 
     @property
     def running(self):
-        return True if (self._process and self._process.poll() is None) else False
+        return (self._process is not None) and (self._process.poll() is None)
 
     def qrcode(self, server_addr):
         qrcode = "%s:%s@%s:%d" % (self.method, self.password, server_addr, self.port)
