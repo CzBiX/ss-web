@@ -16,7 +16,7 @@ class QrcodeHandler(BaseHandler):
         content = self.get_query_argument('chl', strip=False)
 
         url = 'https://chart.googleapis.com/chart?cht=qr&chs=%dx%d&chl=%s&chld=|0'\
-              % (250, 250, escape.url_escape('ss://' + content, plus=False))
+              % (200, 200, escape.url_escape('ss://' + content, plus=False))
 
         request = HTTPRequest(url)
 
