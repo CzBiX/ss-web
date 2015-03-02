@@ -61,6 +61,9 @@
 <script type="text/javascript" src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
 <script type="application/javascript">
     var qrcode_api = '/qrcode?chl=';
+    var sid = {{index}};
+    var data = {running: {{ 'true' if config.running else 'false' }}, qrcode: '{{ qrcode }}', password: '{{ config.password}}',
+            startTime: {{ config.start_time.timestamp() }} };
 
     $(function(){
         var $time = $('#time');
@@ -71,10 +74,8 @@
         var $newPwdBtn = $('#new_password');
         var $qrcodeUri = $('#qrcode_uri');
         var $qrcodeInfo = $('#qrcode_info');
-        var sid = {{index}};
 
-        updateStatus({running: {{ 'true' if config.running else 'false' }}, qrcode: '{{ qrcode }}', password: '{{ config.password}}',
-            startTime: {{ config.start_time.timestamp() }} });
+        updateStatus(data);
 
         $start.click(function(){
             disableBtn($start);
@@ -118,6 +119,7 @@
         function showTime(data) {
             var str = null;
             if (data.running) {
+                // TODO: show as n days ago.
                 var time = data.startTime * 1000;
                 var date = new Date(time);
                 str = (date.getMonth() + 1) + '-' + (date.getDate() + 1);
