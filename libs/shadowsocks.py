@@ -1,9 +1,10 @@
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import string
 import subprocess
 import random
+from tornado.options import options
 
 __author__ = 'czbix'
 
@@ -14,7 +15,7 @@ class Shadowsocks:
         self._config = Shadowsocks._get_server_config()
         self._process = None
         """:type : subprocess.Popen"""
-        self._start_time = None
+        self._next_time = None
 
     @staticmethod
     def _get_server_config():
@@ -63,7 +64,7 @@ class Shadowsocks:
             args.append('--fast-open')
 
         self._process = subprocess.Popen(args)
-        self._start_time = datetime.now()
+        self._next_time = datetime.now() + timedelta(days=options.password_timeout)
 
     def new_password(self):
         password = Shadowsocks._get_new_password()
@@ -79,8 +80,8 @@ class Shadowsocks:
         return (self._process is not None) and (self._process.poll() is None)
 
     @property
-    def start_time(self):
-        return datetime.max if (self._start_time is None) else self._start_time
+    def next_time(self):
+        return datetime.max if (self._next_time is None) else self._next_time
 
     def qrcode(self, server_addr):
         qrcode = "%s:%s@%s:%d" % (self.method, self.password, server_addr, self.port)
@@ -94,7 +95,7 @@ class Shadowsocks:
         self._process.wait()
 
         self._process = None
-        self._start_time = None
+        self._next_time = None
 
     @staticmethod
     def find_oldest(workers):
@@ -103,7 +104,7 @@ class Shadowsocks:
         """
         assert len(workers) > 0
 
-        return min(workers, key=lambda ss: ss.start_time)
+        return min(workers, key=lambda ss: ss.next_time)
 
     @staticmethod
     def find_latest(workers):
@@ -112,7 +113,7 @@ class Shadowsocks:
         """
         assert len(workers) > 0
 
-        return max(workers, key=lambda ss: ss.start_time)
+        return max(workers, key=lambda ss: ss.next_time)
 
     def __del__(self):
         if self.running:

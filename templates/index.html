@@ -12,7 +12,7 @@
 <div class="server_info">
     <div class="line clearfix start-time">
         <label>
-            <span>Start Time</span>
+            <span>Next Reset</span>
             <input id="time" value="..." type="text" readonly/>
         </label>
     </div>
@@ -63,7 +63,7 @@
 <script type="application/javascript">
     var sid = {{index}};
     var data = {running: {{ 'true' if config.running else 'false' }}, qrcode: '{{ qrcode }}', password: '{{ config.password}}',
-            startTime: {{ int(config.start_time.timestamp()) }} };
+            nextTime: {{ int(config.next_time.timestamp()) }} };
 </script>
 </body>
 </html>

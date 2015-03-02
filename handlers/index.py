@@ -38,7 +38,7 @@ class IndexHandler(BaseHandler):
             'running': ss.running,
             'password': ss.password,
             'qrcode': ss.qrcode(self._get_host()),
-            'startTime': ss.start_time.timestamp(),
+            'nextTime': ss.next_time.timestamp(),
         }
 
         self.write_json(result)

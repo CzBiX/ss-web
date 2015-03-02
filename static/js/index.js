@@ -54,14 +54,28 @@ $(function(){
     function showTime(data) {
         var str = null;
         if (data.running) {
-            // TODO: show as n days ago.
-            var time = data.startTime * 1000;
-            var date = new Date(time);
-            str = (date.getMonth() + 1) + '-' + (date.getDate() + 1);
+            str = calcLeftTime(data.nextTime);
         } else {
             str = 'Not run yet';
         }
         $time.val(str);
+    }
+
+    function calcLeftTime(nextTime) {
+        var diffTime = nextTime - (Date.now() / 1000);
+
+        var diffMinutes = diffTime / 60;
+        if (diffMinutes < 60) {
+            return parseInt(diffMinutes) + ' minutes left';
+        }
+
+        var diffHours = diffMinutes / 60;
+        if (diffHours < 24) {
+            return parseInt(diffHours) + ' hours left';
+        }
+
+        var diffDays = diffHours / 24;
+        return parseInt(diffDays) + ' days left';
     }
 
     function enableBtn($el) {

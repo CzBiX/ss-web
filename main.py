@@ -67,11 +67,11 @@ class App(Application):
             looper.call_later(3600, self._reset_timer_callback)
             return
 
-        oldest_time = oldest_worker.start_time
+        oldest_time = oldest_worker.next_time
 
-        from datetime import datetime, timedelta
+        from datetime import datetime
 
-        left_time = (oldest_time + timedelta(days=options.password_timeout)) - datetime.now()
+        left_time = oldest_time - datetime.now()
         if left_time.total_seconds() <= 0:
             logging.info("already timeout, reset password")
             self._reset_password(oldest_worker)
