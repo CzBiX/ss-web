@@ -1,3 +1,4 @@
+from tornado.options import options
 from .base import BaseHandler
 
 __author__ = 'czbix'
@@ -11,7 +12,7 @@ class UserHandler(BaseHandler):
         self.render('user/login.html')
 
     def post(self):
-        if self.get_body_argument('password') != 'bamboofun':
+        if self.get_body_argument('password') != options.login_password:
             self.send_error(500)
 
         self.set_secure_cookie('login', '1')

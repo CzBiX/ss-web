@@ -56,4 +56,6 @@ class IndexHandler(BaseHandler):
         return self.application.reset_timer
 
     def _get_host(self):
-        return self.request.host.lower().split(':')[0]
+        from tornado import httputil
+
+        return httputil.split_host_and_port(self.request.host)[0]
