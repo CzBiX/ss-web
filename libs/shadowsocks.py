@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime,time
 import json
 import string
 import subprocess
@@ -8,10 +9,12 @@ __author__ = 'czbix'
 
 
 class Shadowsocks:
-    def __init__(self):
+    def __init__(self, index):
+        self._index = index
         self._config = Shadowsocks._get_server_config()
         self._process = None
         """:type : subprocess.Popen"""
+        self._start_time = None
 
     @staticmethod
     def _get_server_config():
@@ -19,12 +22,16 @@ class Shadowsocks:
             return json.load(data)
 
     @property
+    def index(self):
+        return self._index
+
+    @property
     def config(self):
         return self._config
 
     @property
     def port(self):
-        return self.config['server_port']
+        return self.config['server_port'] + self.index
 
     @property
     def password(self):
@@ -56,6 +63,7 @@ class Shadowsocks:
             args.append('--fast-open')
 
         self._process = subprocess.Popen(args)
+        self._start_time = datetime.now()
 
     def new_password(self):
         password = Shadowsocks._get_new_password()
@@ -70,17 +78,41 @@ class Shadowsocks:
     def running(self):
         return (self._process is not None) and (self._process.poll() is None)
 
+    @property
+    def start_time(self):
+        return datetime.max if (self._start_time is None) else self._start_time
+
     def qrcode(self, server_addr):
         qrcode = "%s:%s@%s:%d" % (self.method, self.password, server_addr, self.port)
         return base64.b64encode(qrcode.encode()).decode()
 
     def stop(self):
-        assert self._process is not None
+        if self._process is None:
+            return
 
         self._process.terminate()
         self._process.wait()
 
         self._process = None
+        self._start_time = None
+
+    @staticmethod
+    def find_oldest(workers):
+        """
+        :rtype: libs.shadowsocks.Shadowsocks
+        """
+        assert len(workers) > 0
+
+        return min(workers, key=lambda ss: ss.start_time)
+
+    @staticmethod
+    def find_latest(workers):
+        """
+        :rtype: libs.shadowsocks.Shadowsocks
+        """
+        assert len(workers) > 0
+
+        return max(workers, key=lambda ss: ss.start_time)
 
     def __del__(self):
         if self.running:

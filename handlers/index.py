@@ -1,6 +1,7 @@
 from time import sleep
 from handlers.base import BaseHandler
 from tornado.web import authenticated
+from libs.shadowsocks import Shadowsocks
 
 __author__ = 'czbix'
 
@@ -8,25 +9,27 @@ __author__ = 'czbix'
 class IndexHandler(BaseHandler):
     @authenticated
     def get(self):
-        ss = self._get_ss()
-        running = str(ss.running).lower()
+        sid = self.get_query_argument('id', None)
+        if sid is None:
+            self.redirect('/?id=%d' % Shadowsocks.find_latest(self.application.shadowsocks).index)
+            return
+
+        ss = self._get_ss(sid)
         qrcode = ss.qrcode(self._get_host())
-        self.render("index.html", config=ss, running=running, qrcode=qrcode)
+        self.render("index.html", config=ss, qrcode=qrcode, index=sid)
 
     @authenticated
     def post(self):
-        ss = self._get_ss()
+        sid = self.get_body_argument('id')
         action = self.get_body_argument('action')
+
+        ss = self._get_ss(sid)
         if action == 'start':
             ss.start()
             sleep(1)
         elif action == 'stop':
             ss.stop()
         elif action == 'new_password':
-            if self._get_reset_timer() is not None:
-                self._get_reset_timer().stop()
-                self._get_reset_timer().start()
-
             ss.new_password()
             if ss.running:
                 ss.stop()
@@ -35,15 +38,16 @@ class IndexHandler(BaseHandler):
             'running': ss.running,
             'password': ss.password,
             'qrcode': ss.qrcode(self._get_host()),
+            'startTime': ss.start_time.timestamp(),
         }
 
         self.write_json(result)
 
-    def _get_ss(self):
+    def _get_ss(self, index):
         """
         :rtype: libs.shadowsocks.Shadowsocks
         """
-        return self.application.shadowsocks
+        return self.application.shadowsocks[int(index)]
 
     def _get_reset_timer(self):
         """

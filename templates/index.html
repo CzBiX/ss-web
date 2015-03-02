@@ -8,8 +8,14 @@
     <link href="{{ static_url('css/normalize.css') }}" rel="stylesheet">
 </head>
 <body>
-<h1>Shadowsocks Server</h1>
+<h1><a href="/">Shadowsocks Server</a> {{ index }}</h1>
 <div class="server_info">
+    <div class="line clearfix start-time">
+        <label>
+            <span>Start Time</span>
+            <input id="time" value="..." type="text" readonly/>
+        </label>
+    </div>
     <div class="line clearfix password">
         <label>
             <span>Password</span>
@@ -57,6 +63,7 @@
     var qrcode_api = '/qrcode?chl=';
 
     $(function(){
+        var $time = $('#time');
         var $start = $('#start');
         var $stop = $('#stop');
         var $status = $('#status');
@@ -64,8 +71,10 @@
         var $newPwdBtn = $('#new_password');
         var $qrcodeUri = $('#qrcode_uri');
         var $qrcodeInfo = $('#qrcode_info');
+        var sid = {{index}};
 
-        updateStatus({running: {{ running }}, qrcode: '{{ qrcode }}', password: '{{ config.password}}'});
+        updateStatus({running: {{ 'true' if config.running else 'false' }}, qrcode: '{{ qrcode }}', password: '{{ config.password}}',
+            startTime: {{ config.start_time.timestamp() }} });
 
         $start.click(function(){
             disableBtn($start);
@@ -85,7 +94,7 @@
             $status.text('...');
             $pwd.val('...');
 
-            return $.post('/', {action: action}).success(function(data){
+            return $.post('/', {action: action, id: sid}).success(function(data){
                 updateStatus(data);
             }).error(function(){
                 $status.text('Error');
@@ -93,6 +102,8 @@
         }
 
         function updateStatus(data) {
+            showTime(data);
+
             $status.text(data.running);
             if (data.running) {
                 enableBtn($stop);
@@ -102,6 +113,18 @@
 
             showQrCode(data.qrcode);
             showPwd(data.password);
+        }
+
+        function showTime(data) {
+            var str = null;
+            if (data.running) {
+                var time = data.startTime * 1000;
+                var date = new Date(time);
+                str = date.getMonth() + '-' + date.getDate();
+            } else {
+                str = 'Not run yet';
+            }
+            $time.val(str);
         }
 
         function enableBtn($el) {
