@@ -64,7 +64,7 @@ class App(Application):
 
         if not oldest_worker.running:
             logging.info("no more running task, try later")
-            looper.call_later(60, self._reset_timer_callback)
+            looper.call_later(3600, self._reset_timer_callback)
             return
 
         oldest_time = oldest_worker.start_time
