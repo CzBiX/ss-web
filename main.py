@@ -122,7 +122,10 @@ def main():
     server = HTTPServer(app, xheaders=True)
     server.listen(options.port)
 
-    ioloop.IOLoop.instance().start()
+    try:
+        ioloop.IOLoop.instance().start()
+    except KeyboardInterrupt:
+        print('Exit by KeyboardInterrupt')
 
 
 if __name__ == "__main__":
