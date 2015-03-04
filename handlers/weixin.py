@@ -66,7 +66,7 @@ class WeiXinHandler(BaseHandler):
             self.write(self._build_text_reply(to_user, from_user, '谢谢关注喵~'))
             return
 
-        self._unknown_data(to_user, from_user)
+        self._unknown_data(from_user, to_user)
 
     def _unknown_data(self, from_user, to_user):
         self.write(self._build_text_reply(to_user, from_user, 'What does the fox say?'))
@@ -86,5 +86,5 @@ class WeiXinHandler(BaseHandler):
             builder.end(tag)
 
         builder.end('xml')
-        return Et.tostring(builder.close())
+        return Et.tostring(builder.close(), 'utf-8')
 
