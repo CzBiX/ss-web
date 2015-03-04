@@ -114,8 +114,13 @@ class App(Application):
 
         self._reset_timer_callback()
 
+SERVER_CONF_NAME = 'server.conf'
+
 
 def main():
+    if os.path.isfile(SERVER_CONF_NAME):
+        options.parse_config_file(SERVER_CONF_NAME)
+
     options.parse_command_line()
     app = App()
 
