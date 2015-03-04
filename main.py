@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import sys
 
 from tornado import ioloop
 from tornado.httpserver import HTTPServer
@@ -41,7 +42,12 @@ class App(Application):
 
         RequestHandler.set_default_headers = App._set_default_header
 
-        ss_config = Shadowsocks.read_config()
+        try:
+            ss_config = Shadowsocks.read_config()
+        except FileNotFoundError as e:
+            print('can\'t found ' + e.filename)
+            sys.exit(e.errno)
+
         Shadowsocks.workers = [Shadowsocks(i, ss_config) for i in range(options.workers)]
 
         super(App, self).__init__(handlers, **settings)
