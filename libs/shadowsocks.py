@@ -31,7 +31,7 @@ class Shadowsocks:
             data = json.load(file)
 
         if isinstance(data['password'], str):
-            data['password'] = list(data['password'])
+            data['password'] = [data['password']]
 
         return data
 
@@ -130,7 +130,7 @@ class Shadowsocks:
 
     @classmethod
     def save_config(cls, workers):
-        pwd_list = list()
+        pwd_list = []
         for ss in workers:
             pwd_list.append(ss.password)
 
@@ -140,6 +140,7 @@ class Shadowsocks:
             data = json.load(file)
             data['password'] = pwd_list
 
+            file.truncate(0)
             file.seek(0)
             json.dump(data, file)
 
