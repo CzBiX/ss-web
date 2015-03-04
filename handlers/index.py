@@ -9,6 +9,11 @@ __author__ = 'czbix'
 class IndexHandler(BaseHandler):
     @authenticated
     def get(self):
+        if self.request.path == '/save':
+            Shadowsocks.save_config(Shadowsocks.workers)
+            self.write("OK!")
+            return
+
         sid = self.get_query_argument('id', None)
         if sid is None:
             self.redirect('/?id=%d' % Shadowsocks.find_latest(Shadowsocks.workers).index)

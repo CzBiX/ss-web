@@ -36,6 +36,7 @@ class App(Application):
 
         handlers = [
             (r'/', IndexHandler),
+            (r'/save', IndexHandler),
             (r'/user/login', UserHandler),
             (r'/qrcode', QrcodeHandler),
         ]
