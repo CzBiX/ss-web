@@ -1,6 +1,7 @@
 import base64
 from datetime import datetime, timedelta
 import json
+import logging
 import string
 import subprocess
 import random
@@ -151,6 +152,8 @@ class Shadowsocks:
             file.truncate(0)
             file.seek(0)
             json.dump(data, file)
+
+        logging.info('config saved!')
 
     def __del__(self):
         if self.running:
