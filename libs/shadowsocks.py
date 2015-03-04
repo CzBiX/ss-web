@@ -10,17 +10,30 @@ __author__ = 'czbix'
 
 
 class Shadowsocks:
-    def __init__(self, index):
+    CONFIG_FILE_NAME = 'config.json'
+
+    workers = None
+    """:type : list[Shadowsocks]"""
+
+    def __init__(self, index, config):
         self._index = index
-        self._config = Shadowsocks._get_server_config()
+        self._config = config
         self._process = None
         """:type : subprocess.Popen"""
         self._next_time = None
 
-    @staticmethod
-    def _get_server_config():
-        with open("config.json") as data:
-            return json.load(data)
+        pwds = config['password']
+        self._password = pwds[index if len(pwds) > index else 0]
+
+    @classmethod
+    def read_config(cls):
+        with open(cls.CONFIG_FILE_NAME) as file:
+            data = json.load(file)
+
+        if isinstance(data['password'], str):
+            data['password'] = list(data['password'])
+
+        return data
 
     @property
     def index(self):
@@ -36,11 +49,11 @@ class Shadowsocks:
 
     @property
     def password(self):
-        return self.config['password']
+        return self._password
 
     @password.setter
     def password(self, value):
-        self.config['password'] = value
+        self._password = value
 
     @property
     def method(self):
@@ -84,7 +97,7 @@ class Shadowsocks:
         return datetime.max if (self._next_time is None) else self._next_time
 
     def qrcode(self, server_addr):
-        qrcode = "%s:%s@%s:%d" % (self.method, self.password, server_addr, self.port)
+        qrcode = '%s:%s@%s:%d' % (self.method, self.password, server_addr, self.port)
         return base64.b64encode(qrcode.encode()).decode()
 
     def stop(self):
@@ -114,6 +127,21 @@ class Shadowsocks:
         assert len(workers) > 0
 
         return max(workers, key=lambda ss: ss.next_time)
+
+    @classmethod
+    def save_config(cls, workers):
+        pwd_list = list()
+        for ss in workers:
+            pwd_list.append(ss.password)
+
+        with open(cls.CONFIG_FILE_NAME, mode='r+') as file:
+            import json
+
+            data = json.load(file)
+            data['password'] = pwd_list
+
+            file.seek(0)
+            json.dump(data, file)
 
     def __del__(self):
         if self.running:

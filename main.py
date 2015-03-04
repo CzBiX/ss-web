@@ -26,6 +26,7 @@ class App(Application):
         current_path = os.path.dirname(__file__)
         settings = dict(
             debug=options.debug,
+            autoreload=True,
             template_path=os.path.join(current_path, "templates"),
             static_path=os.path.join(current_path, "static"),
             cookie_secret=options.cookie_secret,
@@ -39,7 +40,9 @@ class App(Application):
         ]
 
         RequestHandler.set_default_headers = App._set_default_header
-        self.shadowsocks = [Shadowsocks(i) for i in range(options.workers)]
+
+        ss_config = Shadowsocks.read_config()
+        Shadowsocks.workers = [Shadowsocks(i, ss_config) for i in range(options.workers)]
 
         super(App, self).__init__(handlers, **settings)
 
@@ -48,6 +51,16 @@ class App(Application):
         self.reset_timer = None
         if options.password_timeout > 0:
             self._reset_timer_callback()
+
+        from tornado import autoreload
+        autoreload.add_reload_hook(App._stop_all_worker)
+
+    @staticmethod
+    def _stop_all_worker():
+        Shadowsocks.save_config(Shadowsocks.workers)
+
+        for ss in Shadowsocks.workers:
+            ss.stop()
 
     @staticmethod
     def _set_default_header(handler):
@@ -60,7 +73,7 @@ class App(Application):
             looper.remove_timeout(self.reset_timer)
             self.reset_timer = None
 
-        oldest_worker = Shadowsocks.find_oldest(self.shadowsocks)
+        oldest_worker = Shadowsocks.find_oldest(Shadowsocks.workers)
 
         if not oldest_worker.running:
             logging.info("no more running task, try later")
@@ -82,7 +95,7 @@ class App(Application):
 
     def _reset_password(self, oldest_worker=None):
         if oldest_worker is None:
-            oldest_worker = Shadowsocks.find_oldest(self.shadowsocks)
+            oldest_worker = Shadowsocks.find_oldest(Shadowsocks.workers)
 
         oldest_worker.new_password()
         if oldest_worker.running:

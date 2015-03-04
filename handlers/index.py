@@ -11,7 +11,7 @@ class IndexHandler(BaseHandler):
     def get(self):
         sid = self.get_query_argument('id', None)
         if sid is None:
-            self.redirect('/?id=%d' % Shadowsocks.find_latest(self.application.shadowsocks).index)
+            self.redirect('/?id=%d' % Shadowsocks.find_latest(Shadowsocks.workers).index)
             return
 
         ss = self._get_ss(sid)
@@ -43,11 +43,12 @@ class IndexHandler(BaseHandler):
 
         self.write_json(result)
 
-    def _get_ss(self, index):
+    @staticmethod
+    def _get_ss(index):
         """
         :rtype: libs.shadowsocks.Shadowsocks
         """
-        return self.application.shadowsocks[int(index)]
+        return Shadowsocks.workers[int(index)]
 
     def _get_reset_timer(self):
         """
