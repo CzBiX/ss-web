@@ -50,6 +50,8 @@ class App(Application):
             sys.exit(e.errno)
 
         Shadowsocks.workers = [Shadowsocks(i, ss_config) for i in range(options.workers)]
+        for index in ss_config['running']:
+            Shadowsocks.workers[index].start()
 
         super(App, self).__init__(handlers, **settings)
 

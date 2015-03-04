@@ -33,6 +33,9 @@ class Shadowsocks:
         if isinstance(data['password'], str):
             data['password'] = [data['password']]
 
+        if 'running' not in data:
+            data['running'] = []
+
         return data
 
     @property
@@ -130,8 +133,12 @@ class Shadowsocks:
 
     @classmethod
     def save_config(cls, workers):
+        running = []
         pwd_list = []
         for ss in workers:
+            if ss.running:
+                running.append(ss.index)
+
             pwd_list.append(ss.password)
 
         with open(cls.CONFIG_FILE_NAME, mode='r+') as file:
@@ -139,6 +146,7 @@ class Shadowsocks:
 
             data = json.load(file)
             data['password'] = pwd_list
+            data['running'] = running
 
             file.truncate(0)
             file.seek(0)
