@@ -13,6 +13,7 @@ class WeiXinHandler(BaseHandler):
     CREATE_TIME_TAG = 'CreateTime'
     MSG_TYPE_TAG = 'MsgType'
     CONTENT_TAG = 'Content'
+    EVENT_TAG = 'Event'
 
     # TODO: token should be configurable
     TOKEN = 'wxpush'
@@ -46,9 +47,26 @@ class WeiXinHandler(BaseHandler):
             content = tree.find(self.CONTENT_TAG).text
             logging.debug('received text msg, content: ' + content)
             self._unknown_data(from_user, to_user)
-        else:
-            logging.debug('received unknown msg, msg_type: ' + msg_type)
-            self._unknown_data(from_user, to_user)
+            return
+
+        if msg_type == 'event':
+            self._handle_event_msg(tree, from_user, to_user)
+            return
+
+        logging.debug('received unknown msg, msg_type: ' + msg_type)
+        self._unknown_data(from_user, to_user)
+
+    def _handle_event_msg(self, tree, from_user, to_user):
+        event = tree.find(self.EVENT_TAG).text
+        if event == 'unsubscribe':
+            # there is nothing we can do
+            return
+
+        if event == 'subscribe':
+            self.write(self._build_text_reply(to_user, from_user, '谢谢关注喵~'))
+            return
+
+        self._unknown_data(to_user, from_user)
 
     def _unknown_data(self, from_user, to_user):
         self.write(self._build_text_reply(to_user, from_user, 'What does the fox say?'))
