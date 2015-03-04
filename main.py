@@ -6,9 +6,10 @@ from tornado.httpserver import HTTPServer
 from tornado.options import define
 from tornado.web import Application, os, RequestHandler
 
-from handlers.index import *
-from handlers.qrcode import *
-from handlers.user import *
+from handlers.index import IndexHandler
+from handlers.qrcode import QrcodeHandler
+from handlers.user import UserHandler
+from handlers.weixin import WeiXinHandler
 from libs.shadowsocks import Shadowsocks
 
 
@@ -39,6 +40,7 @@ class App(Application):
             (r'/save', IndexHandler),
             (r'/user/login', UserHandler),
             (r'/qrcode', QrcodeHandler),
+            (r'/weixin', WeiXinHandler),
         ]
 
         RequestHandler.set_default_headers = App._set_default_header
