@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 import sys
+import logging
 
 from tornado import ioloop
 from tornado.httpserver import HTTPServer
-from tornado.options import define
+from tornado.options import define, options
 from tornado.web import Application, os, RequestHandler
 
 from handlers.index import IndexHandler
@@ -64,6 +65,7 @@ class App(Application):
             self._reset_timer_callback()
 
         from tornado import autoreload
+
         autoreload.add_reload_hook(App._stop_all_worker)
 
     @staticmethod
@@ -115,6 +117,7 @@ class App(Application):
         oldest_worker.start()
 
         self._reset_timer_callback()
+
 
 SERVER_CONF_NAME = 'server.conf'
 
