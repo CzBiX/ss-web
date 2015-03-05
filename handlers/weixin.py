@@ -65,20 +65,12 @@ class WeiXinHandler(BaseHandler):
         content = tree.find(self.CONTENT_TAG).text
         logging.debug('received text msg, content: ' + content)
 
-        if str.isdecimal(content):
-            index = int(content)
-            try:
-                ss = Shadowsocks.workers[index]
-            except IndexError:
-                return False
-
-            self.write(self._build_text_reply(to_user, from_user, self._build_ss_info(ss)))
-            return True
-
         return False
 
     @staticmethod
-    def _build_ss_info(ss):
+    def _build_ss_info():
+        ss = Shadowsocks.find_latest(Shadowsocks.workers)
+
         content = 'Id: %d\n' \
                   'Port: %d\n' \
                   'Password: %s\n' \
@@ -100,8 +92,7 @@ class WeiXinHandler(BaseHandler):
         if event == self.CLICK_EVENT:
             event_key = tree.find(self.EVENT_KEY_TAG).text
             if event_key == self.GET_PWD_EVENT_KEY:
-                self.write(self._build_text_reply(to_user, from_user,
-                                                  '直接输入 0-%d 获得对应服务器的信息' % (len(Shadowsocks.workers) - 1)))
+                self.write(self._build_text_reply(to_user, from_user, self._build_ss_info()))
                 return True
 
         return False
