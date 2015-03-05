@@ -21,7 +21,7 @@ class IndexHandler(BaseHandler):
 
         ss = self._get_ss(sid)
         qrcode = ss.qrcode(self._get_host())
-        self.render("index.html", config=ss, qrcode=qrcode, index=sid)
+        self.render("index.html", config=ss, qrcode=qrcode)
 
     @authenticated
     def post(self):

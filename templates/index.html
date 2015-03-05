@@ -8,7 +8,7 @@
     <link href="{{ static_url('css/normalize.css') }}" rel="stylesheet">
 </head>
 <body>
-<h1><a href="/">Shadowsocks Server</a> {{ index }}</h1>
+<h1><a href="/">Shadowsocks Server</a> {{ config.index }}</h1>
 <div class="server_info">
     <div class="line clearfix start-time">
         <label>
@@ -61,7 +61,7 @@
 <script type="application/javascript" src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
 <script type="application/javascript" src="{{ static_url('js/index.js') }}"></script>
 <script type="application/javascript">
-    var sid = {{index}};
+    var sid = {{ config.index }};
     var data = {running: {{ 'true' if config.running else 'false' }}, qrcode: '{{ qrcode }}', password: '{{ config.password}}',
             nextTime: {{ int(config.next_time.timestamp()) }} };
 </script>
