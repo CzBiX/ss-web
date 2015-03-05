@@ -70,7 +70,7 @@ class WeiXinHandler(BaseHandler):
                 ss = Shadowsocks.workers[index]
             except IndexError:
                 return False
-            
+
             self.write(self._build_text_reply(to_user, from_user, self._build_ss_info(ss)))
             return True
 
@@ -96,7 +96,7 @@ class WeiXinHandler(BaseHandler):
 
         if event == self.CLICK_EVENT:
             event_key = tree.find(self.EVENT_KEY_TAG).text
-            if event_key == self.CLICK_EVENT:
+            if event_key == self.GET_PWD_EVENT_KEY:
                 self.write(self._build_text_reply(to_user, from_user,
                                                   '直接输入 0-%d 获得对应服务器的信息' % (len(Shadowsocks.workers) - 1)))
                 return True
