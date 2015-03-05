@@ -80,7 +80,7 @@ class WeiXinHandler(BaseHandler):
     def _build_ss_info(ss):
         content = 'Id: %d\n' \
                   'Port: %d\n' \
-                  'Password: %s' \
+                  'Password: %s\n' \
                   'Running: %s' \
                   % (ss.index, ss.port, ss.password, str(ss.running))
 
