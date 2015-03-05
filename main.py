@@ -16,7 +16,7 @@ from libs.shadowsocks import Shadowsocks
 
 __author__ = 'czbix'
 
-define("debug", default=True, type=bool)
+define("debug", default=False, type=bool)
 define("login_password", default="bamboofun", type=str)
 define("port", default=8000, help="port to listen", type=int)
 define("cookie_secret", default="61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o", help="key for HMAC", type=str)
