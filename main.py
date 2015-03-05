@@ -17,7 +17,7 @@ from libs.shadowsocks import Shadowsocks
 __author__ = 'czbix'
 
 define("debug", default=False, type=bool)
-define("login_password", default="bamboofun", type=str)
+define("login_password", type=str)
 define("port", default=8000, help="port to listen", type=int)
 define("cookie_secret", default="61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o", help="key for HMAC", type=str)
 define("password_timeout", default=7, help="auto reset ss password for days", type=int)
@@ -132,6 +132,11 @@ def main():
         options.parse_config_file(SERVER_CONF_NAME)
 
     options.parse_command_line()
+
+    if options.login_password is None:
+        print('please configure login password first')
+        sys.exit(-1)
+
     app = App()
 
     server = HTTPServer(app, xheaders=True)
