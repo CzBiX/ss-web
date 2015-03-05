@@ -1,6 +1,7 @@
 import hashlib
 import logging
 import xml.etree.ElementTree as Et
+from tornado.options import options
 from tornado.web import HTTPError
 from handlers.base import BaseHandler
 from libs.shadowsocks import Shadowsocks
@@ -23,12 +24,12 @@ class WeiXinHandler(BaseHandler):
 
     GET_PWD_EVENT_KEY = 'getPwd'
 
-    # TODO: token should be configurable
-    TOKEN = 'wxpush'
-
     def prepare(self):
-        if not self.settings['debug'] and not self._check_sign():
-            raise HTTPError(401, 'invalid signature')
+        if not self._check_sign():
+            if options.debug:
+                logging.warning('invalid signature')
+            else:
+                raise HTTPError(401, 'invalid signature')
 
     def get(self):
         echostr = self.get_query_argument('echostr')
@@ -39,7 +40,7 @@ class WeiXinHandler(BaseHandler):
         nonce = self.get_query_argument('nonce')
         signature = self.get_query_argument('signature')
 
-        calc_sign = hashlib.sha1(''.join(sorted([self.TOKEN, timestamp, nonce])).encode()).hexdigest()
+        calc_sign = hashlib.sha1(''.join(sorted([options.wx_token, timestamp, nonce])).encode()).hexdigest()
 
         return signature == calc_sign
 

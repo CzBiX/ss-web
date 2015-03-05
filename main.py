@@ -22,6 +22,7 @@ define("port", default=8000, help="port to listen", type=int)
 define("cookie_secret", default="61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o", help="key for HMAC", type=str)
 define("password_timeout", default=7, help="auto reset ss password for days", type=int)
 define("workers", default=3, help="the number of worker", type=int)
+define('wx_token', help='the token used for weixin', type=str)
 
 
 class App(Application):
@@ -41,8 +42,12 @@ class App(Application):
             (r'/save', IndexHandler),
             (r'/user/login', UserHandler),
             (r'/qrcode', QrcodeHandler),
-            (r'/weixin', WeiXinHandler),
         ]
+
+        if options.wx_token is None:
+            logging.info('wx_token is not configured')
+        else:
+            handlers.append((r'/weixin', WeiXinHandler))
 
         RequestHandler.set_default_headers = App._set_default_header
 
