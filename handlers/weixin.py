@@ -70,12 +70,13 @@ class WeiXinHandler(BaseHandler):
     @staticmethod
     def _build_ss_info():
         ss = Shadowsocks.find_latest(Shadowsocks.workers)
+        if not ss.running:
+            ss.start()
 
         content = 'Id: %d\n' \
                   'Port: %d\n' \
-                  'Password: %s\n' \
-                  'Running: %s' \
-                  % (ss.index, ss.port, ss.password, str(ss.running))
+                  'Password: %s' \
+                  % (ss.index, ss.port, ss.password)
 
         return content
 
