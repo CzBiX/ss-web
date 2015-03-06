@@ -59,7 +59,7 @@ class WeiXinHandler(BaseHandler):
         else:
             logging.debug('received unknown msg, msg_type: ' + msg_type)
 
-        self._unknown_data(from_user, to_user)
+        self._unknown_msg(from_user, to_user)
 
     def _handle_text_msg(self, tree, from_user, to_user):
         content = tree.find(self.CONTENT_TAG).text
@@ -98,8 +98,22 @@ class WeiXinHandler(BaseHandler):
 
         return False
 
-    def _unknown_data(self, from_user, to_user):
-        self.write(self._build_text_reply(to_user, from_user, 'What does the fox say?'))
+    def _unknown_msg(self, from_user, to_user):
+        random_texts = ['What does the fox say',
+                        'Do you want to build a snowman',
+                        'Let it go',
+                        'You belong with me',
+                        'Just one last dance',
+                        'If I were a boy',
+                        'Nothing else I can say',
+                        '恋は渾沌の隷也',
+                        '残酷な天使のテーゼ',
+                        '恋爱サーキュレーション',
+                        'ワールドイズマイン']
+
+        import random
+
+        self.write(self._build_text_reply(to_user, from_user, random.choice(random_texts)))
 
     @classmethod
     def _build_text_reply(cls, from_user, to_user, content):
