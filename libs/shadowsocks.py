@@ -11,10 +11,12 @@ __author__ = 'czbix'
 
 
 class Shadowsocks:
-    CONFIG_FILE_NAME = 'config.json'
-
     workers = None
     """:type : list[Shadowsocks]"""
+
+    _CONFIG_FILE_NAME = 'config.json'
+
+    _new_password_callback = []
 
     def __init__(self, index, config):
         self._index = index
@@ -28,7 +30,7 @@ class Shadowsocks:
 
     @classmethod
     def read_config(cls):
-        with open(cls.CONFIG_FILE_NAME) as file:
+        with open(cls._CONFIG_FILE_NAME) as file:
             data = json.load(file)
 
         if isinstance(data['password'], str):
@@ -83,12 +85,20 @@ class Shadowsocks:
         self._process = subprocess.Popen(args)
         self._next_time = datetime.now() + timedelta(days=options.password_timeout)
 
-    def new_password(self):
-        password = Shadowsocks._get_new_password()
+    def new_password(self, is_manual):
+        password = Shadowsocks._gen_new_password()
         self.password = password
 
+        if options.debug or not is_manual:
+            for func in self._new_password_callback:
+                func(self)
+
+    @classmethod
+    def add_password_callback(cls, func):
+        cls._new_password_callback.append(func)
+
     @staticmethod
-    def _get_new_password():
+    def _gen_new_password():
         # noinspection PyUnusedLocal
         return ''.join([random.choice(string.ascii_letters + string.digits) for n in range(8)])
 
@@ -142,7 +152,7 @@ class Shadowsocks:
 
             pwd_list.append(ss.password)
 
-        with open(cls.CONFIG_FILE_NAME, mode='r+') as file:
+        with open(cls._CONFIG_FILE_NAME, mode='r+') as file:
             import json
 
             data = json.load(file)

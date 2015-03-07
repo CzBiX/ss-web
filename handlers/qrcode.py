@@ -21,7 +21,7 @@ class QrcodeHandler(BaseHandler):
         request = HTTPRequest(url)
 
         if options.debug:
-            logging.info("qrcode url: " + url)
+            logging.debug("qrcode url: " + url)
             request.proxy_host = '127.0.0.1'
             request.proxy_port = 8123
 

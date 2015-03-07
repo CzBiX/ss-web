@@ -35,7 +35,7 @@ class IndexHandler(BaseHandler):
         elif action == 'stop':
             ss.stop()
         elif action == 'new_password':
-            ss.new_password()
+            ss.new_password(is_manual=True)
             if ss.running:
                 ss.stop()
 

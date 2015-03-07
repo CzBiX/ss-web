@@ -12,17 +12,22 @@ from handlers.qrcode import QrcodeHandler
 from handlers.user import UserHandler
 from handlers.weixin import WeiXinHandler
 from libs.shadowsocks import Shadowsocks
-
+from libs.weixin import WeiXin
 
 __author__ = 'czbix'
 
-define("debug", default=False, type=bool)
 define("login_password", type=str)
+define("workers", default=3, help="the number of worker", type=int)
+define('wx_token', help='the token used for weixin', type=str)
+define('wx_template_id', type=str)
+define('wx_users', type=list)
+define('wx_app_id', type=str)
+define('wx_secret', type=str)
+
+define("debug", default=False, type=bool)
 define("port", default=8000, help="port to listen", type=int)
 define("cookie_secret", default="61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o", help="key for HMAC", type=str)
 define("password_timeout", default=7, help="auto reset ss password for days", type=int)
-define("workers", default=3, help="the number of worker", type=int)
-define('wx_token', help='the token used for weixin', type=str)
 
 
 class App(Application):
@@ -48,6 +53,11 @@ class App(Application):
             logging.info('wx_token is not configured')
         else:
             handlers.append((r'/weixin', WeiXinHandler))
+
+        if options.wx_app_id is None or options.wx_secret is None or options.wx_template_id is None:
+            logging.info('wx_app_id/wx_secret/wx_template_id is not configured')
+        else:
+            Shadowsocks.add_password_callback(lambda ss: WeiXin.send_ss_info(ss))
 
         RequestHandler.set_default_headers = App._set_default_header
 
@@ -115,7 +125,7 @@ class App(Application):
         if oldest_worker is None:
             oldest_worker = Shadowsocks.find_oldest(Shadowsocks.workers)
 
-        oldest_worker.new_password()
+        oldest_worker.new_password(is_manual=False)
         if oldest_worker.running:
             oldest_worker.stop()
 
