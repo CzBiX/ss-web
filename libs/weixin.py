@@ -169,7 +169,6 @@ class WeiXinApi:
 
     _access_token = None
     _expire_time = -1
-    _refresh_timeout = None
 
     @classmethod
     @gen.coroutine
@@ -188,11 +187,6 @@ class WeiXinApi:
 
         cls._access_token = data['access_token']
         cls._expire_time = time.time() + data['expires_in']
-
-        if cls._refresh_timeout is not None:
-            IOLoop.instance().remove_timeout(cls._refresh_timeout)
-
-        IOLoop.instance().call_at(cls._expire_time - 60, cls._refresh_token)
 
     @classmethod
     @gen.coroutine
