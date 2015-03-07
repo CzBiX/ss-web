@@ -1,11 +1,13 @@
 import logging
+
 from tornado import escape
 from tornado import curl_httpclient
-from tornado import simple_httpclient
 from tornado import gen
-from tornado.httpclient import HTTPRequest
+from tornado.httpclient import HTTPRequest, AsyncHTTPClient
 from tornado.options import options
+
 from handlers.base import BaseHandler
+
 
 __author__ = 'czbix'
 
@@ -27,7 +29,7 @@ class QrcodeHandler(BaseHandler):
 
             client = curl_httpclient.CurlAsyncHTTPClient()
         else:
-            client = simple_httpclient.SimpleAsyncHTTPClient()
+            client = AsyncHTTPClient()
 
         response = yield client.fetch(request)
 
