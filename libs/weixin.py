@@ -31,7 +31,7 @@ class WeiXin:
 
     _GET_PWD_EVENT_KEY = 'getPwd'
 
-    _thread_pool = ThreadPoolExecutor(3)
+    _thread_pool = ThreadPoolExecutor(1)
 
     def __init__(self, request_handler):
         self.handler = request_handler
