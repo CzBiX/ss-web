@@ -9,6 +9,7 @@ $(function(){
     var $newPwdBtn = $('#new_password');
     var $qrcodeUri = $('#qrcode_uri');
     var $qrcodeInfo = $('#qrcode_info');
+    var $ssLink = $('#ss_link');
 
     updateStatus(data);
 
@@ -90,6 +91,7 @@ $(function(){
         var url = qrcode_api + encodeURIComponent(qrcode);
         $qrcodeInfo.attr('src', url);
         $qrcodeUri.val('ss://' + qrcode);
+        $ssLink.attr('href', 'ss://' + qrcode);
     }
 
     function showPwd(password) {
